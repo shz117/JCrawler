@@ -1,0 +1,110 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-GB" lang="en-GB">
+<head>
+    <meta http-equiv=Content-Type content="text/html; charset=utf-8" />
+    
+    <title>L'Oréal Paris : For Men</title>
+    
+    <style type="text/css" media="all">
+        @import'men-expert-2011/css/dispatch.css';
+    </style>
+    
+    <!--[if lte IE 7]><style type="text/css" media="all">
+        @import'men-expert-2011/css/ie/dispatch.css';
+    </style><![endif]-->
+    
+    <script type="text/javascript" src="men-expert-2011/js/jquery.js"></script>
+    <script type="text/javascript" src="men-expert-2011/js/dispatch.js"></script>
+    
+    <!-- BEGIN COREMETRICS SUPPORT -->
+    <script src="js/coremetrics/eluminate.js" type="text/javascript"></script>
+    <script src="js/coremetrics/cmdatatagutils.js" type="text/javascript"></script>
+    <script src="js/coremetrics/cmtools.js" type="text/javascript"></script>
+    <!-- END COREMETRICS -->
+            
+    <link rel="shortcut icon" type="image/x-icon" href="http://www.loreal-paris.fr/img/common/identity/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="http://www.loreal-paris.fr/img/common/identity/favicon.ico">
+</head>
+
+<body>
+    <div id="core">
+        <div id="header">
+            <h1><img src="men-expert-2011/img/texts/core-h1.png" alt="L'Oréal ® Paris - Men Expert" /></h1>
+        </div>
+        
+        <div class="content">
+            <div id="country-selector">
+                <p class="label"><img src="men-expert-2011/img/texts/country-selector-label.png" alt="Select your country" /></p>
+                
+                <!-- start sections -->
+                <div class="sections">
+                    <div class="section special-item">
+                        <h2>Europe</h2>
+                        
+                        <div class="expand">
+                            <ul>
+                                <li><a href="http://www.loreal-paris.de/manner.aspx">Austria</a></li>
+                                <li><a href="http://www.loreal-paris.fr/hommes.aspx">France</a></li>
+                                <li><a href="http://www.loreal-paris.de/mann.aspx">Germany</a></li>
+                                <li><a href="http://www.lorealparis.gr/antres.aspx">Greece</a></li>
+                                <li><a href="http://www.loreal-paris.it/_it/_it/category/uomo/index.aspx">Italy</a></li>
+                                <li><a href="http://www.lorealmen.nl">Netherlands</a></li>
+								<li><a href="http://www.lorealparis.pl/mezczyzni.aspx">Poland</a></li>
+                                <li><a href="http://www.loreal-paris.es/hombres.aspx">Spain</a></li>
+                                <li><a href="http://www.lorealmen.se">Sweden</a></li>
+                                <li><a href="http://www.loreal-paris.co.uk/men.aspx">United Kingdom</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <h2>Asia</h2>
+                        
+                        <div class="expand"></div>
+                    </div>
+                    
+                    <div class="section">
+                        <h2>North America</h2>
+                        
+                        <div class="expand">
+                            <ul>
+                                <li><a href="http://www.loreal-paris.ca/_en/_ca/products/super-category.aspx?code=Men">Canada (English)</a></li>
+                                <li><a href="http://www.lorealparis.ca/_fr/_ca/products/super-category.aspx?code=Men">Canada (French)</a></li>
+                                <li><a href="http://www.lorealparisusa.com/_us/_en/default.aspx#page=top{nav|media:_blank|overlay:_blank|diagnostic|main:supercategory:men|userdata//d+d//}">USA</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <h2>South America</h2>
+                        
+                        <div class="expand"></div>
+                    </div>
+                    
+                    <div class="section">
+                        <h2>Oceania</h2>
+                        
+                        <div class="expand">
+                            <ul>
+                                <li><a href="http://www.lorealparis.com.au/men.aspx">Australia</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- end sections -->
+            </div>
+        </div>
+        
+        <div class="visual">
+            <img src="men-expert-2011/img/visual/core-visual.jpg" alt="" />
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    LOP.execStatCM("type=tagPageView;category=Dispatch;tag=Lorealmen");
+</script>
+</body>
+</html>
