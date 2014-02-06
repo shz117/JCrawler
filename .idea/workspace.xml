@@ -27,10 +27,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="JCrawler.py" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="JCrawler.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/JCrawler.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="17" column="19" selection-start="335" selection-end="335" vertical-scroll-proportion="92.88461" vertical-offset="2670" max-vertical-offset="3135">
+            <state line="17" column="19" selection-start="335" selection-end="335" vertical-scroll-proportion="-2.375" vertical-offset="1110" max-vertical-offset="3135">
               <folding>
                 <element signature="e#22#32#0" expanded="true" />
               </folding>
@@ -72,10 +72,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="JStats.py" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="JStats.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/JStats.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="13" column="73" selection-start="423" selection-end="423" vertical-scroll-proportion="0.5051814" vertical-offset="0" max-vertical-offset="386">
+            <state line="13" column="73" selection-start="423" selection-end="423" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="345">
               <folding>
                 <element signature="e#21#32#0" expanded="true" />
               </folding>
@@ -515,6 +515,22 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/JLogger.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="8" column="0" selection-start="183" selection-end="183" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="240">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/JStats.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="13" column="73" selection-start="423" selection-end="423" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="345">
+          <folding>
+            <element signature="e#21#32#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/JRepowriter.py">
       <provider selected="true" editor-type-id="text-editor">
         <state line="14" column="0" selection-start="349" selection-end="349" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="300">
@@ -524,27 +540,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/JLogger.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="0" selection-start="183" selection-end="183" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="240">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/JCrawler.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="17" column="19" selection-start="335" selection-end="335" vertical-scroll-proportion="92.88461" vertical-offset="2670" max-vertical-offset="3135">
+        <state line="17" column="19" selection-start="335" selection-end="335" vertical-scroll-proportion="-2.375" vertical-offset="1110" max-vertical-offset="3135">
           <folding>
             <element signature="e#22#32#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/JStats.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="13" column="73" selection-start="423" selection-end="423" vertical-scroll-proportion="0.5051814" vertical-offset="0" max-vertical-offset="386">
-          <folding>
-            <element signature="e#21#32#0" expanded="true" />
           </folding>
         </state>
       </provider>
