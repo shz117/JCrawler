@@ -7,6 +7,8 @@ import JLogger
 from collections import deque
 import time
 import threading
+from JStats import JStats
+THREADCOUNT=8
 DEBUG = True
 CRAWEDSIZE=0
 TOTSIZE=0
@@ -21,11 +23,14 @@ def getSeeds(keyWords):
     seeds = []
     start = 0
     while len(seeds)<10:
+        time.sleep(2)
         try:
             request = urllib2.Request(url+str(start), None)
             response = urllib2.urlopen(request)
             results = simplejson.load(response)
             print JColors.OKBLUE+'Results fetched successfully!'
+            print results
+            print type(results['responseData'])
             for res in results['responseData']['results']:
                 seeds.append(res['url'])
                 # print res['url']
@@ -47,15 +52,18 @@ def isVisited(url):
 
 def downloadPage(q,pq):
     global CRAWEDSIZE,TOTSIZE
+
     while True:
         if len(q)<1:
                 print JColors.BOLD+'Download thread: No more URL to download, go to sleep...'
                 time.sleep(3)
                 continue
         # JLogger.log(JColors.OKBLUE+'Downloader: Current craw status '+str(CRAWEDSIZE)+'/'+str(TOTSIZE))
-        print JColors.OKBLUE+'Downloader: Start fetching URL...'
+        if CRAWEDSIZE>=TOTSIZE:
+            break
+        print JColors.OKBLUE+'Downloader: Start fetching from URL...'
         curUrl=''
-        while len(q)>0 and CRAWEDSIZE<TOTSIZE:
+        while len(q)>0:
             curUrl = q.popleft();
             if not isVisited(curUrl):
                 break
@@ -67,6 +75,7 @@ def downloadPage(q,pq):
                     item['data']=response.read()
                     response.close()
                     item['level']=curUrl['level']
+                    item['domain']=curUrl['domain']
                     pq.append(item)
                     JLogger.log(JColors.OKGREEN+'Download '+curUrl['url']+' succeeded!')
             except Exception:
@@ -76,7 +85,6 @@ def downloadPage(q,pq):
 # 2. save page and meta data into repofile
 def parsePage(q,pq):
     global CRAWEDSIZE,TOTSIZE
-
     while True:
         if len(pq)<1:
             print JColors.BOLD+'Parser thread: No more page to parse, go to sleep...'
@@ -92,8 +100,21 @@ def parsePage(q,pq):
         for line in lines:
             n=line.find('href')
             if n!=-1:
-                url=line[n:-1].split('"')[1]
+                ll=line[n:-1].split('"')
+                if len(ll)>2:
+                    url=ll[1]
+                else:
+                    continue
                 urlItem=dict()
+                if url.find('http')==-1:
+                    url=curPage['domain']+url
+                    urlItem['domain']=curPage['domain']
+                else:
+                    lst=url.split('/')
+                    try:
+                        urlItem['domain']=lst[0]+'//'+lst[2]
+                    except Exception:
+                        print lst
                 urlItem['url']=url
                 urlItem['level']=curPage['level']+1
                 q.append(urlItem)
@@ -111,7 +132,7 @@ def parsePage(q,pq):
 
 def main():
     #get agvs
-    global TOTSIZE
+    global TOTSIZE,THREADCOUNT
     try:
         keyWords = sys.argv[1:-1]
         TOTSIZE = int(sys.argv[-1])
@@ -128,16 +149,24 @@ def main():
         item['url']=s
         # item['status']='unvisited'
         item['level']=0
+        lst=s.split('/')
+        item['domain']=lst[0]+'//'+lst[2]
         q.append(item)
 
     #downloaded pages queue
     pq=deque()
 
-    downloadThread = threading.Thread(target=downloadPage(q,pq))
-    parseThread = threading.Thread(target=parsePage(q,pq))
-    downloadThread.start()
+    stat=JStats(TOTSIZE)
+    parseThread = threading.Thread(target=parsePage,args=(q,pq))
     parseThread.start()
+    # parseThread.join()
+    for i in range(1,THREADCOUNT):
+        downloadThread = threading.Thread(target=downloadPage,args=(q,pq))
+        downloadThread.start()
+        downloadThread.join()
+    stat.report()
 
 
 if __name__=="__main__":
+
     main()
