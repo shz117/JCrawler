@@ -1,6 +1,7 @@
 __author__ = 'Jeremy'
 import sys
 import urllib2,urllib
+import robotparser
 import simplejson
 from JColors import JColors
 import JLogger
@@ -9,6 +10,7 @@ import time
 import threading
 from JStats import JStats
 from JCache import JCache
+import JRepowriter
 THREADCOUNT=15
 DEBUG = True
 CRAWEDSIZE=0
@@ -62,15 +64,14 @@ def isVisited(url):
 
 def downloadPage(q,pq):
     global CRAWEDSIZE,TOTSIZE
-
     while True:
         if len(q)<1:
                 print JColors.BOLD+'Download thread: No more URL to download, go to sleep...'
                 time.sleep(3)
                 continue
         # JLogger.log(JColors.OKBLUE+'Downloader: Current craw status '+str(CRAWEDSIZE)+'/'+str(TOTSIZE))
-        if CRAWEDSIZE>=TOTSIZE:
-            break
+        if CRAWEDSIZE+len(pq)>=TOTSIZE:
+            return
         print JColors.OKBLUE+'Downloader: Start fetching from URL...'
         curUrl=''
         while len(q)>0:
@@ -88,6 +89,7 @@ def downloadPage(q,pq):
                     item['domain']=curUrl['domain']
                     pq.append(item)
                     JLogger.log(JColors.OKGREEN+'Download '+curUrl['url']+' succeeded!')
+                    print 'pq length:'+str(len(pq))
             except Exception:
                 JLogger.log(JColors.WARNING+'Download '+curUrl['url']+' failed!')
 
@@ -100,12 +102,23 @@ def parsePage(q,pq):
             print JColors.BOLD+'Parser thread: No more page to parse, go to sleep...'
             time.sleep(3)
             continue
-        if CRAWEDSIZE>=TOTSIZE:
+        if CRAWEDSIZE+len(pq)>=TOTSIZE or len(q)>1.5*TOTSIZE:
             return
         # JLogger.log(JColors.OKBLUE+'Parser: Current craw status '+str(CRAWEDSIZE)+'/'+str(TOTSIZE))
         print JColors.OKBLUE+'Parser: fetching and parsing page...'
         curPage=pq.popleft()
         data=curPage['data']
+
+        #===================================================
+        #for test: save current processing page to file
+        try:
+            temp=open('PROCESSINGFILE','w')
+            temp.write(data)
+            temp.close()
+        except IOError:
+            print 'Failed to open PROCESSINGFILE'
+        #===================================================
+
         lines=data.splitlines()
         for line in lines:
             n=line.find('href')
@@ -125,20 +138,24 @@ def parsePage(q,pq):
                         urlItem['domain']=lst[0]+'//'+lst[2]
                     except Exception:
                         print lst
+                rp=robotparser.RobotFileParser()
+                rp.set_url(urlItem['domain']+'/robots.txt')
+                rp.read()
+                if not rp.can_fetch('*',url):
+                    print JColors.WARNING+''+url+' Forbidden by robot.txt, skipped!'
+                    continue
                 urlItem['url']=url
                 urlItem['level']=curPage['level']+1
                 q.append(urlItem)
+                print len(q)
+                if len(q)>3*TOTSIZE:
+                    return
                 JLogger.log(JColors.OKGREEN+'Parser: new URL '+url+' added to URL queue!')
         #wirte page to file and increase counter
         JLogger.log(JColors.OKBLUE+'Parser: writing processed page...')
-        try:
-            REPOFILE=open('REPOFILE','a')
-            REPOFILE.write(data+'\n')
-            REPOFILE.close()
-            CRAWEDSIZE=CRAWEDSIZE+1
-            JLogger.log(JColors.OKBLUE+'Parser: Current craw status '+str(CRAWEDSIZE)+'/'+str(TOTSIZE))
-        except IOError:
-            print JColors.FAIL+'Failed to open repo file!'
+        JRepowriter.writeRepo(curPage)
+        CRAWEDSIZE=CRAWEDSIZE+1
+        JLogger.log(JColors.OKBLUE+'Parser: Current craw status '+str(CRAWEDSIZE)+'/'+str(TOTSIZE))
 
 def main():
     #get agvs
@@ -174,6 +191,10 @@ def main():
         downloadThread = threading.Thread(target=downloadPage,args=(q,pq))
         downloadThread.start()
         downloadThread.join()
+
+    JLogger.log(JColors.OKBLUE+'Parser: got enough page, writing pages in queue to REPOFILE...')
+    for page in pq:
+        JRepowriter.writeRepo(page)
     stat.report()
 
 
