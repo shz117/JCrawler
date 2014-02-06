@@ -8,7 +8,8 @@ from collections import deque
 import time
 import threading
 from JStats import JStats
-THREADCOUNT=8
+from JCache import JCache
+THREADCOUNT=15
 DEBUG = True
 CRAWEDSIZE=0
 TOTSIZE=0
@@ -16,11 +17,18 @@ TOTSIZE=0
 visited=set()
 
 def getSeeds(keyWords):
+    keyString='%20'.join(keyWords)
+    #check cache first :-)
+    cache=JCache()
+    seeds = cache.find(keyString)
+    if seeds:
+        print JColors.OKBLUE+''+str(len(seeds))+' seeds fetched successfully from cache!'
+        return seeds
     #compose url
-    url = 'http://ajax.googleapis.com/ajax/services/search/web?v=1.0&q='+'%20'.join(keyWords)+'&userip=74.64.18.187&rsz=4&start='
+    url = 'http://ajax.googleapis.com/ajax/services/search/web?v=1.0&q='+keyString+'&userip=74.64.18.187&rsz=4&start='
     print JColors.OKBLUE+'--Composed query URL:'+url
     #loop for 10 urls for given keywords    from google
-    seeds = []
+    seeds=[]
     start = 0
     while len(seeds)<10:
         time.sleep(2)
@@ -44,6 +52,8 @@ def getSeeds(keyWords):
         start=start+4
         #print seeds
     print JColors.OKBLUE+''+str(len(seeds))+' seeds fetched successfully!'
+    #update cache
+    cache.put(keyString,seeds)
     return seeds
 
 
