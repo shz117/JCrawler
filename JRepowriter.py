@@ -2,10 +2,12 @@ __author__ = 'admin'
 import JLogger
 from JColors import JColors
 
-def writeRepo(curPage):
+def writeRepo(curPage,keyWords):
     try:
-        REPOFILE=open('REPOFILE','a')
-        REPOFILE.write('This page is level: '+str(curPage['level']))
+        keyString='&'.join(keyWords)
+        REPOFILE=open('REPOFILE_'+keyString,'a')
+        REPOFILE.write('Priority: '+str(curPage['priority'])+'\n')
+        REPOFILE.write('Score: '+str(curPage['score'])+'\n')
         REPOFILE.write(curPage.get('data')+'\n')
         REPOFILE.close()
 

@@ -1,22 +1,24 @@
 __author__ = 'Jeremy'
 import sys
-import urllib2,urllib
+import urllib2
 import robotparser
 import simplejson
 from JColors import JColors
 import JLogger
-from collections import deque
+from Queue import PriorityQueue as PQ,Queue
 import time
 import threading
 from JStats import JStats
 from JCache import JCache
 import JRepowriter
+keyWords=[]
 THREADCOUNT=15
 DEBUG = True
 CRAWEDSIZE=0
 TOTSIZE=0
 #visited dictionary
 visited=set()
+TOTAL404=0
 
 def getSeeds(keyWords):
     keyString='%20'.join(keyWords)
@@ -62,51 +64,57 @@ def getSeeds(keyWords):
 def isVisited(url):
     return url['url'] in visited
 
+
 def downloadPage(q,pq):
-    global CRAWEDSIZE,TOTSIZE
+    global CRAWEDSIZE,TOTSIZE,TOTAL404,keyWords
     while True:
-        if len(q)<1:
+        if q.qsize()<1:
                 print JColors.BOLD+'Download thread: No more URL to download, go to sleep...'
                 time.sleep(3)
                 continue
         # JLogger.log(JColors.OKBLUE+'Downloader: Current craw status '+str(CRAWEDSIZE)+'/'+str(TOTSIZE))
-        if CRAWEDSIZE+len(pq)>=TOTSIZE:
+        if CRAWEDSIZE+pq.qsize()>=TOTSIZE:
             return
         print JColors.OKBLUE+'Downloader: Start fetching from URL...'
-        curUrl=''
-        while len(q)>0:
-            curUrl = q.popleft();
+        curUrl=dict()
+        while q.qsize()>0:
+            curUrl = q.get()[1];
             if not isVisited(curUrl):
                 break
         if curUrl and not isVisited(curUrl):
             try:
-                response=urllib.urlopen(curUrl['url'])
-                if response.code==200:
-                    item=dict()
-                    item['data']=response.read()
+                response=urllib2.urlopen(curUrl['url'],timeout=5)
+                if response.code==404:
+                    TOTAL404+=1
+                    JLogger.log('Got a 404 response!')
+                if response.code==200 and response.info().type=='text/html':
+                    page_item=dict()
+                    page_item['data']=response.read()
                     response.close()
-                    item['level']=curUrl['level']
-                    item['domain']=curUrl['domain']
-                    pq.append(item)
+                    page_item['domain']=curUrl['domain']
+                    page_item['priority']=curUrl['priority']
+                    page_item['score']=-1
+                    pq.put(page_item,False)
                     JLogger.log(JColors.OKGREEN+'Download '+curUrl['url']+' succeeded!')
-                    print 'pq length:'+str(len(pq))
+                    print 'pq length:'+str(pq.qsize())
             except Exception:
                 JLogger.log(JColors.WARNING+'Download '+curUrl['url']+' failed!')
 
 # 1. parse URL from page
 # 2. save page and meta data into repofile
+# 3. find actuall score
 def parsePage(q,pq):
-    global CRAWEDSIZE,TOTSIZE
+    global CRAWEDSIZE,TOTSIZE,keyWords
     while True:
-        if len(pq)<1:
+        if pq.qsize()<1:
             print JColors.BOLD+'Parser thread: No more page to parse, go to sleep...'
             time.sleep(3)
             continue
-        if CRAWEDSIZE+len(pq)>=TOTSIZE or len(q)>1.5*TOTSIZE:
+        if CRAWEDSIZE+pq.qsize()>=TOTSIZE or q.qsize()>1.5*TOTSIZE:
             return
         # JLogger.log(JColors.OKBLUE+'Parser: Current craw status '+str(CRAWEDSIZE)+'/'+str(TOTSIZE))
         print JColors.OKBLUE+'Parser: fetching and parsing page...'
-        curPage=pq.popleft()
+        curPage=pq.get()
         data=curPage['data']
 
         #===================================================
@@ -120,9 +128,12 @@ def parsePage(q,pq):
         #===================================================
 
         lines=data.splitlines()
+        score=0
         for line in lines:
+            for wd in keyWords:
+                score+=line.count(wd)
             n=line.find('href')
-            if n!=-1:
+            if CRAWEDSIZE<=TOTSIZE and n!=-1:
                 ll=line[n:-1].split('"')
                 if len(ll)>2:
                     url=ll[1]
@@ -140,26 +151,43 @@ def parsePage(q,pq):
                         print lst
                 rp=robotparser.RobotFileParser()
                 rp.set_url(urlItem['domain']+'/robots.txt')
-                rp.read()
-                if not rp.can_fetch('*',url):
-                    print JColors.WARNING+''+url+' Forbidden by robot.txt, skipped!'
-                    continue
+                try:
+                    rp.read()
+                    if not rp.can_fetch('*',url):
+                        print JColors.WARNING+''+url+' Forbidden by robot.txt, skipped!'
+                        continue
+                except Exception:
+                    print "Load robot failed"
                 urlItem['url']=url
-                urlItem['level']=curPage['level']+1
-                q.append(urlItem)
-                print len(q)
-                if len(q)>3*TOTSIZE:
+                # calculate url priority : according to keyword count in url itself
+                url_priority=curPage['priority']+10
+                for wd in keyWords:
+                    url_priority-url.count(wd)
+                urlItem['priority']=url_priority
+                q.put((url_priority,urlItem))
+                print q.qsize()
+                if q.qsize()>1.5*TOTSIZE:
                     return
-                JLogger.log(JColors.OKGREEN+'Parser: new URL '+url+' added to URL queue!')
+                JLogger.log(JColors.OKGREEN+'Parser: new URL '+url+' added to URL queue! Priority:'+str(url_priority))
         #wirte page to file and increase counter
+        curPage['score']=score
         JLogger.log(JColors.OKBLUE+'Parser: writing processed page...')
-        JRepowriter.writeRepo(curPage)
+        JRepowriter.writeRepo(curPage,keyWords)
         CRAWEDSIZE=CRAWEDSIZE+1
         JLogger.log(JColors.OKBLUE+'Parser: Current craw status '+str(CRAWEDSIZE)+'/'+str(TOTSIZE))
 
+def calcScore(page):
+    data=page['data']
+    lines=data.splitlines()
+    score=0
+    for line in lines:
+        for wd in keyWords:
+            score+=line.count(wd)
+    page['score']=score
+
 def main():
     #get agvs
-    global TOTSIZE,THREADCOUNT
+    global TOTSIZE,THREADCOUNT,TOTAL404,keyWords
     try:
         keyWords = sys.argv[1:-1]
         TOTSIZE = int(sys.argv[-1])
@@ -170,18 +198,21 @@ def main():
     seeds = getSeeds(keyWords)
 
     #put em in a queue
-    q=deque()
+    q=PQ()
     for s in seeds:
         item = dict()
         item['url']=s
         # item['status']='unvisited'
-        item['level']=0
         lst=s.split('/')
+        item['priority']=0
         item['domain']=lst[0]+'//'+lst[2]
-        q.append(item)
+        try:
+            q.put((item['priority'],item))
+        except Exception:
+            print 'This is never gonna happen...'
 
     #downloaded pages queue
-    pq=deque()
+    pq=Queue()
 
     stat=JStats(TOTSIZE)
     parseThread = threading.Thread(target=parsePage,args=(q,pq))
@@ -193,9 +224,11 @@ def main():
         downloadThread.join()
 
     JLogger.log(JColors.OKBLUE+'Parser: got enough page, writing pages in queue to REPOFILE...')
-    for page in pq:
-        JRepowriter.writeRepo(page)
-    stat.report()
+    while not pq.empty():
+        page=pq.get()
+        if page['score']==-1: calcScore(page)
+        JRepowriter.writeRepo(page,keyWords)
+    stat.report(TOTAL404)
 
 
 if __name__=="__main__":
