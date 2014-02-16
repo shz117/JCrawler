@@ -4,7 +4,7 @@ Yet another super basic web crawler. For course: Web Search Engines
 
 Work flow:
 
-1. accept input key words and number of result pages intended to be crawed
+1. accept input key words and number of result pages intended to be crawled
 
 2. ask Google for top 10 websites for these key words as seed sites
 
