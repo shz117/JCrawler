@@ -72,7 +72,6 @@ def getSeeds(keyWords):
             response = urllib2.urlopen(request)
             results = simplejson.load(response)
             print JColors.OKBLUE+'Results fetched successfully!'
-            print results
             for res in results['responseData']['results']:
                 seeds.append(res['url'])
                 if len(seeds)>=10:

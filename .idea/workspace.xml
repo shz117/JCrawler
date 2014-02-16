@@ -30,7 +30,7 @@
       <file leaf-file-name="JCrawler.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/JCrawler.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="32" column="52" selection-start="834" selection-end="834" vertical-scroll-proportion="-3.8846154" vertical-offset="379" max-vertical-offset="4395">
+            <state line="282" column="0" selection-start="10549" selection-end="10549" vertical-scroll-proportion="-5.0384617" vertical-offset="4099" max-vertical-offset="4380">
               <folding>
                 <element signature="e#22#35#0" expanded="true" />
               </folding>
@@ -41,16 +41,28 @@
       <file leaf-file-name="LOGFILE" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/LOGFILE">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="1230" column="57" selection-start="59251" selection-end="59295" vertical-scroll-proportion="0.0" vertical-offset="89573" max-vertical-offset="90300">
+            <state line="1599" column="57" selection-start="59251" selection-end="59295" vertical-scroll-proportion="0.0" vertical-offset="95108" max-vertical-offset="95835">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="JStats.py" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="README.md" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/README.md">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="7" column="0" selection-start="195" selection-end="195" vertical-scroll-proportion="0.375" vertical-offset="0" max-vertical-offset="495">
+              <folding />
+            </state>
+          </provider>
+          <provider editor-type-id="MarkdownPreviewEditor">
+            <state />
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="JStats.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/JStats.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="15" column="22" selection-start="488" selection-end="488" vertical-scroll-proportion="0.5625" vertical-offset="0" max-vertical-offset="660">
+            <state line="15" column="22" selection-start="488" selection-end="488" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="660">
               <folding />
             </state>
           </provider>
@@ -70,11 +82,11 @@
         <option value="$PROJECT_DIR$/test.py" />
         <option value="$PROJECT_DIR$/JLogger.py" />
         <option value="$PROJECT_DIR$/JCache.py" />
-        <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/JPriorityQueue.py" />
         <option value="$PROJECT_DIR$/JRepowriter.py" />
         <option value="$PROJECT_DIR$/JStats.py" />
         <option value="$PROJECT_DIR$/JCrawler.py" />
+        <option value="$PROJECT_DIR$/README.md" />
       </list>
     </option>
   </component>
@@ -707,16 +719,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="17" column="0" selection-start="580" selection-end="580" vertical-scroll-proportion="0.8306189" vertical-offset="0" max-vertical-offset="540">
-          <folding />
-        </state>
-      </provider>
-      <provider editor-type-id="MarkdownPreviewEditor">
-        <state />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/JCache.py">
       <provider selected="true" editor-type-id="text-editor">
         <state line="10" column="39" selection-start="216" selection-end="216" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="240">
@@ -724,27 +726,37 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/JCrawler.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="32" column="52" selection-start="834" selection-end="834" vertical-scroll-proportion="-3.8846154" vertical-offset="379" max-vertical-offset="4395">
-          <folding>
-            <element signature="e#22#35#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/LOGFILE">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="1230" column="57" selection-start="59251" selection-end="59295" vertical-scroll-proportion="0.0" vertical-offset="89573" max-vertical-offset="90300">
+        <state line="1599" column="57" selection-start="59251" selection-end="59295" vertical-scroll-proportion="0.0" vertical-offset="95108" max-vertical-offset="95835">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/JStats.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="15" column="22" selection-start="488" selection-end="488" vertical-scroll-proportion="0.5625" vertical-offset="0" max-vertical-offset="660">
+        <state line="15" column="22" selection-start="488" selection-end="488" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="660">
           <folding />
         </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/JCrawler.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="282" column="0" selection-start="10549" selection-end="10549" vertical-scroll-proportion="-5.0384617" vertical-offset="4099" max-vertical-offset="4380">
+          <folding>
+            <element signature="e#22#35#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="7" column="0" selection-start="195" selection-end="195" vertical-scroll-proportion="0.375" vertical-offset="0" max-vertical-offset="495">
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="MarkdownPreviewEditor">
+        <state />
       </provider>
     </entry>
   </component>
