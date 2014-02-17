@@ -152,7 +152,7 @@ def parsePage(q,pq):
     3. calculate actual score of a page by : Sum(# of key word appearance in a page)
     """
     global CRAWEDSIZE,TOTSIZE,keyWords
-    while True:
+    while CRAWEDSIZE+pq.qsize()<TOTSIZE:
         # fetch page data from pq to parse, go to sleep if pq is empty
         if pq.qsize()<1:
             print JColors.BOLD+'Parser thread: No more page to parse, go to sleep...'
@@ -182,7 +182,7 @@ def parsePage(q,pq):
             for wd in keyWords:
                 score+=line.count(wd)
             n=line.find('href')
-            if CRAWEDSIZE<=TOTSIZE and n!=-1:
+            if CRAWEDSIZE+pq.qsize()<TOTSIZE and n!=-1:
                 ll=line[n:-1].split('"')
                 if len(ll)>2:
                     url=ll[1]
@@ -214,17 +214,19 @@ def parsePage(q,pq):
                 for wd in keyWords:
                     url_priority-url.count(wd)
                 urlItem['priority']=url_priority
-                q.put((url_priority,urlItem))
-                print q.qsize()
-                if q.qsize()>1.5*TOTSIZE:
-                    return
-                JLogger.log(JColors.OKGREEN+'Parser: new URL '+url+' added to URL queue! Priority:'+str(url_priority))
+                if CRAWEDSIZE+pq.qsize()<TOTSIZE:
+                    q.put((url_priority,urlItem))
+                    print q.qsize()
+                    if q.qsize()>1.5*TOTSIZE:
+                        return
+                    JLogger.log(JColors.OKGREEN+'Parser: new URL '+url+' added to URL queue! Priority:'+str(url_priority))
         #wirte page to file and increase counter
         curPage['score']=score
-        JLogger.log(JColors.OKBLUE+'Parser: writing processed page...')
-        writeRepo(curPage,keyWords)
-        CRAWEDSIZE=CRAWEDSIZE+1
-        JLogger.log(JColors.OKBLUE+'Parser: Current craw status '+str(CRAWEDSIZE)+'/'+str(TOTSIZE))
+        if CRAWEDSIZE+pq.qsize()<TOTSIZE:
+            JLogger.log(JColors.OKBLUE+'Parser: writing processed page...')
+            writeRepo(curPage,keyWords)
+            CRAWEDSIZE=CRAWEDSIZE+1
+            JLogger.log(JColors.OKBLUE+'Parser: Current craw status '+str(CRAWEDSIZE)+'/'+str(TOTSIZE))
 
 def calcScore(page):
     data=page['data']
@@ -237,7 +239,7 @@ def calcScore(page):
 
 def main():
     #get agvs
-    global TOTSIZE,THREADCOUNT,TOTAL404,keyWords
+    global TOTSIZE,THREADCOUNT,TOTAL404,keyWords,CRAWEDSIZE
     try:
         keyWords = sys.argv[1:-1]
         TOTSIZE = int(sys.argv[-1])
@@ -278,6 +280,7 @@ def main():
         page=pq.get()
         if page['score']==-1: calcScore(page)
         writeRepo(page,keyWords)
+        CRAWEDSIZE+=1
     stat.report(TOTAL404,RELCNT,keyWords)
 
 
